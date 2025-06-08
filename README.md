@@ -48,6 +48,36 @@ export GOOSE_PLANNER_MODEL=gpt-4
 
 Both patterns help you balance model capabilities with cost and speed for optimal results, and switch between models and vendors as required.
 
+## DeepSeek Integration
+
+This fork includes enhanced DeepSeek integration with support for both V3 and R1 models:
+
+### Quick Setup
+```bash
+# Clone and setup
+git clone https://github.com/knlmagic/DeepGoose.git
+cd DeepGoose
+source setup_deepseek.sh
+cargo build --release
+
+# Start using DeepSeek
+./target/release/goose session
+```
+
+### DeepSeek Models
+- **deepseek-chat** (DeepSeek-V3-0324) - Lead model for complex reasoning and code generation
+- **deepseek-reasoner** (DeepSeek-R1-0528) - Planner model for strategic thinking and planning
+
+### Configuration
+```bash
+export DEEPSEEK_API_KEY="your-api-key"
+export GOOSE_PROVIDER="deepseek"
+export GOOSE_LEAD_MODEL="deepseek-chat"
+export GOOSE_PLANNER_MODEL="deepseek-reasoner"
+```
+
+See [DEEPSEEK_INTEGRATION.md](DEEPSEEK_INTEGRATION.md) for complete setup and usage documentation.
+
 
 # Quick Links
 - [Quickstart](https://block.github.io/goose/docs/quickstart)

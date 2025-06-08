@@ -23,6 +23,7 @@ Goose relies heavily on tool calling capabilities and currently works best with 
 | [Anthropic](https://www.anthropic.com/)                                     | Offers Claude, an advanced AI model for natural language tasks.                                                                                                                                                           | `ANTHROPIC_API_KEY`, `ANTHROPIC_HOST` (optional)                                                                                                                                                                 |
 | [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/) | Access Azure-hosted OpenAI models, including GPT-4 and GPT-3.5. Supports both API key and Azure credential chain authentication.                                                                                          | `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT_NAME`, `AZURE_OPENAI_API_KEY` (optional)                                                                                           |
 | [Databricks](https://www.databricks.com/)                                   | Unified data analytics and AI platform for building and deploying models.                                                                                                                                                 | `DATABRICKS_HOST`, `DATABRICKS_TOKEN`                                                                                                                                               |
+| [DeepSeek](https://www.deepseek.com/)                                       | Advanced AI models including DeepSeek-V3 for reasoning and DeepSeek-R1 for planning. OpenAI-compatible API with streaming support.                                                                                        | `DEEPSEEK_API_KEY`, `DEEPSEEK_HOST` (optional), `DEEPSEEK_BASE_PATH` (optional), `DEEPSEEK_TIMEOUT` (optional)                                                                      |
 | [Gemini](https://ai.google.dev/gemini-api/docs)                             | Advanced LLMs by Google with multimodal capabilities (text, images).                                                                                                                                                      | `GOOGLE_API_KEY`                                                                                                                                                                    |
 | [GCP Vertex AI](https://cloud.google.com/vertex-ai)                         | Google Cloud's Vertex AI platform, supporting Gemini and Claude models. **Credentials must be configured in advance. Follow the instructions at https://cloud.google.com/vertex-ai/docs/authentication.**                 | `GCP_PROJECT_ID`, `GCP_LOCATION` and optional `GCP_MAX_RETRIES` (6), `GCP_INITIAL_RETRY_INTERVAL_MS` (5000), `GCP_BACKOFF_MULTIPLIER` (2.0), `GCP_MAX_RETRY_INTERVAL_MS` (320_000). |
 | [GitHub Copilot](https://docs.github.com/en/copilot/using-github-copilot/ai-models) | Access to GitHub Copilot's chat models including gpt-4o, o1, o3-mini, and Claude models. Uses device code authentication flow for secure access. | Uses GitHub device code authentication flow (no API key needed) |
@@ -213,6 +214,90 @@ Goose supports using custom OpenAI-compatible endpoints, which is particularly u
 
 :::tip Enterprise Deployment
 For enterprise deployments, you can pre-configure these values using environment variables or configuration files to ensure consistent governance across your organization.
+:::
+
+## Using DeepSeek Models
+
+DeepSeek provides advanced AI models with OpenAI-compatible API, offering both reasoning and planning capabilities through specialized models.
+
+### Available Models
+
+| Model | Version | Use Case | Context Length |
+|-------|---------|----------|----------------|
+| `deepseek-chat` | DeepSeek-V3-0324 | Complex reasoning, code generation, general tasks | 64K tokens |
+| `deepseek-reasoner` | DeepSeek-R1-0528 | Strategic planning, step-by-step reasoning | 64K tokens |
+
+### Configuration Parameters
+
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `DEEPSEEK_API_KEY` | Yes | - | Your DeepSeek API key |
+| `DEEPSEEK_HOST` | No | `https://api.deepseek.com` | API base URL |
+| `DEEPSEEK_BASE_PATH` | No | `v1/chat/completions` | API endpoint path |
+| `DEEPSEEK_TIMEOUT` | No | `600` | Request timeout in seconds |
+
+### Multi-Model Configuration
+
+DeepSeek works excellently with Goose's multi-model pattern:
+
+```bash
+# Use DeepSeek for all models
+export GOOSE_PROVIDER="deepseek"
+export GOOSE_MODEL="deepseek-chat"
+
+# Use specialized models for different purposes
+export GOOSE_LEAD_MODEL="deepseek-chat"        # For complex reasoning
+export GOOSE_PLANNER_MODEL="deepseek-reasoner" # For strategic planning
+```
+
+### Setup Instructions
+
+<Tabs groupId="interface">
+  <TabItem value="ui" label="Goose Desktop" default>
+    1. Click `...` in the upper right corner
+    2. Click `Advanced Settings`
+    3. Next to `Models`, click the `browse` link
+    4. Click the `configure` link in the upper right corner
+    5. Press the `+` button next to DeepSeek
+    6. Fill in your configuration details:
+       - API Key (required)
+       - Host URL (optional, defaults to api.deepseek.com)
+       - Base Path (optional, defaults to v1/chat/completions)
+       - Timeout (optional, defaults to 600 seconds)
+    7. Press `submit`
+  </TabItem>
+  <TabItem value="cli" label="Goose CLI">
+    1. Run `goose configure`
+    2. Select `Configure Providers`
+    3. Choose `DeepSeek` as the provider
+    4. Enter your configuration when prompted:
+       - API key (required)
+       - Host URL (optional)
+       - Base path (optional)
+       - Timeout (optional)
+    5. Select your preferred model (`deepseek-chat` recommended)
+  </TabItem>
+</Tabs>
+
+### Quick Start with DeepSeek
+
+For the DeepGoose fork with enhanced DeepSeek integration:
+
+```bash
+# Clone and setup
+git clone https://github.com/knlmagic/DeepGoose.git
+cd DeepGoose
+source setup_deepseek.sh
+cargo build --release
+
+# Start using DeepSeek
+./target/release/goose session
+```
+
+:::tip Model Selection
+- Use `deepseek-chat` for general tasks, coding, and complex reasoning
+- Use `deepseek-reasoner` for planning tasks via the `/plan` command
+- Both models support streaming and have excellent tool-calling capabilities
 :::
 
 ## Using Goose for Free
