@@ -98,6 +98,30 @@ export const PROVIDER_REGISTRY: ProviderRegistry[] = [
     },
   },
   {
+    name: 'DeepSeek',
+    details: {
+      id: 'deepseek',
+      name: 'DeepSeek',
+      description: 'Access DeepSeek V3 and R1 models with advanced reasoning capabilities',
+      parameters: [
+        {
+          name: 'DEEPSEEK_API_KEY',
+          is_secret: true,
+        },
+        {
+          name: 'DEEPSEEK_HOST',
+          is_secret: false,
+          default: 'https://api.deepseek.com',
+        },
+        {
+          name: 'DEEPSEEK_BASE_PATH',
+          is_secret: false,
+          default: 'v1/chat/completions',
+        },
+      ],
+    },
+  },
+  {
     name: 'Google',
     details: {
       id: 'google',

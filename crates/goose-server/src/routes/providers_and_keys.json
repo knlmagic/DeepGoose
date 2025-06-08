@@ -11,6 +11,12 @@
         "models": ["claude-3.5-sonnet-2"],
         "required_keys": ["ANTHROPIC_API_KEY", "ANTHROPIC_HOST"]
     },
+    "deepseek": {
+        "name": "DeepSeek",
+        "description": "Use DeepSeek V3 and R1 models with advanced reasoning",
+        "models": ["deepseek-chat", "deepseek-reasoner"],
+        "required_keys": ["DEEPSEEK_API_KEY", "DEEPSEEK_HOST", "DEEPSEEK_BASE_PATH"]
+    },
     "databricks": {
         "name": "Databricks",
         "description": "Connect to LLMs via Databricks",
